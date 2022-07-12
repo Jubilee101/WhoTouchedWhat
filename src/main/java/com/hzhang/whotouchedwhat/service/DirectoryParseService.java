@@ -13,6 +13,7 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 public class DirectoryParseService {
     private Directory root;
@@ -25,6 +26,7 @@ public class DirectoryParseService {
     }
 
     public void parseDirectory(String address){
+        address = Paths.get(address + "\\.git").toString();
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try {
             Repository repository = builder.setGitDir(new File(address))
@@ -52,7 +54,7 @@ public class DirectoryParseService {
      * @param node
      * @throws IOException
      */
-    void buildDirectoryTree(TreeWalk treeWalk, Directory node) throws IOException {
+    private void buildDirectoryTree(TreeWalk treeWalk, Directory node) throws IOException {
         while (treeWalk.next()) {
             /**
              * Since we set post order traversal to be true,

@@ -20,6 +20,9 @@ public class Directory implements Serializable {
         contributorFreqMap = new HashMap<>();
         subDirectories = new ArrayList<>();
     }
+    public List<Directory> getSubDirectories() {
+        return this.subDirectories;
+    }
 
     public String getName() {
         return name;
