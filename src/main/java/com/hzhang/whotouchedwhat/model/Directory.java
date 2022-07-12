@@ -20,4 +20,21 @@ public class Directory implements Serializable {
         contributorFreqMap = new HashMap<>();
         subDirectories = new ArrayList<>();
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void addDirectory(Directory directory) {
+        subDirectories.add(directory);
+    }
+
+    public void addContributor(String contributorName) {
+        contributorFreqMap.put(contributorName,
+                contributorFreqMap.getOrDefault(contributorName, 0) + 1);
+    }
 }
