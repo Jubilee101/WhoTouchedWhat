@@ -1,8 +1,8 @@
 package com.hzhang.whotouchedwhat.service;
 
 import com.hzhang.whotouchedwhat.model.Directory;
+import com.hzhang.whotouchedwhat.utils.LogFollowCommand;
 import exceptions.InvalidDirectoryException;
-import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -17,6 +17,7 @@ import java.nio.file.Paths;
 
 public class DirectoryParseService {
     private Directory root;
+    private Repository repository;
     public DirectoryParseService() {
         root = new Directory();
     }
@@ -29,7 +30,7 @@ public class DirectoryParseService {
         address = Paths.get(address + "\\.git").toString();
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try {
-            Repository repository = builder.setGitDir(new File(address))
+            repository = builder.setGitDir(new File(address))
                     .readEnvironment()
                     .findGitDir()
                     .build();
@@ -68,6 +69,10 @@ public class DirectoryParseService {
             Directory file = new Directory();
             file.setName(treeWalk.getNameString());
             node.addDirectory(file);
+            RevWalk rw = LogFollowCommand.follow(repository, treeWalk.getPathString());
+            for (RevCommit commit : rw) {
+                file.addContributor(commit.getAuthorIdent().getName());
+            }
             if (treeWalk.isSubtree()) {
                 treeWalk.enterSubtree();
                 buildDirectoryTree(treeWalk, file);
