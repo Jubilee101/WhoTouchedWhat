@@ -10,6 +10,7 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
+import org.yaml.snakeyaml.util.UriEncoder;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,13 +29,16 @@ public class DirectoryParseService {
 
     public void parseDirectory(String address){
         address = Paths.get(address + "\\.git").toString();
+        address = UriEncoder.decode(address);
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try {
             repository = builder.setGitDir(new File(address))
                     .readEnvironment()
                     .findGitDir()
                     .build();
+
             Ref head = repository.findRef("HEAD");
+            root.setName(head.getName());
             RevWalk walk = new RevWalk(repository);
             RevCommit commit = walk.parseCommit(head.getObjectId());
             RevTree tree = commit.getTree();
@@ -46,6 +50,8 @@ public class DirectoryParseService {
         } catch (IOException e) {
             e.printStackTrace();
             throw new InvalidDirectoryException("Unable to parse directory");
+        } finally {
+            repository.close();
         }
     }
 
@@ -67,12 +73,10 @@ public class DirectoryParseService {
                 return;
             }
             Directory file = new Directory();
-            file.setName(treeWalk.getNameString());
+            file.setName(UriEncoder.encode(treeWalk.getNameString()));
+            file.setPath(UriEncoder.encode(treeWalk.getPathString()));
+            file.setRepoAddress(UriEncoder.encode(repository.getDirectory().getAbsolutePath()));
             node.addDirectory(file);
-            RevWalk rw = LogFollowCommand.follow(repository, treeWalk.getPathString());
-            for (RevCommit commit : rw) {
-                file.addContributor(commit.getAuthorIdent().getName());
-            }
             if (treeWalk.isSubtree()) {
                 treeWalk.enterSubtree();
                 buildDirectoryTree(treeWalk, file);

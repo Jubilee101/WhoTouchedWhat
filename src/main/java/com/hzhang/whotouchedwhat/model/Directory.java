@@ -4,24 +4,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Directory implements Serializable {
-    @JsonProperty("id")
+    @JsonProperty("file_name")
     private String name;
-    @JsonProperty("contributor_freq")
-    private Map<String, Integer> contributorFreqMap;
     @JsonProperty("subdirectories")
     private List<Directory> subDirectories;
+    @JsonProperty("file_path")
+    private String path;
 
+    public String getRepoAddress() {
+        return repoAddress;
+    }
+
+    public void setRepoAddress(String repoAddress) {
+        this.repoAddress = repoAddress;
+    }
+
+    @JsonProperty("repo_address")
+    private String repoAddress;
     public Directory() {
-        contributorFreqMap = new HashMap<>();
         subDirectories = new ArrayList<>();
     }
     public List<Directory> getSubDirectories() {
         return this.subDirectories;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getName() {
@@ -36,8 +51,4 @@ public class Directory implements Serializable {
         subDirectories.add(directory);
     }
 
-    public void addContributor(String contributorName) {
-        contributorFreqMap.put(contributorName,
-                contributorFreqMap.getOrDefault(contributorName, 0) + 1);
-    }
 }
