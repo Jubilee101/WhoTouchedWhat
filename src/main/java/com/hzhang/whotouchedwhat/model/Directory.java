@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Directory implements Serializable {
-    @JsonProperty("file_name")
+    @JsonProperty("title")
     private String name;
-    @JsonProperty("subdirectories")
+    @JsonProperty("children")
     private List<Directory> subDirectories;
     @JsonProperty("file_path")
     private String path;

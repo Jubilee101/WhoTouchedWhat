@@ -28,8 +28,8 @@ public class DirectoryParseService {
     }
 
     public void parseDirectory(String address){
-        address = Paths.get(address + "\\.git").toString();
         address = UriEncoder.decode(address);
+        address = Paths.get(address, ".git").toString();
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try {
             repository = builder.setGitDir(new File(address))
@@ -73,8 +73,8 @@ public class DirectoryParseService {
                 return;
             }
             Directory file = new Directory();
-            file.setName(UriEncoder.encode(treeWalk.getNameString()));
-            file.setPath(UriEncoder.encode(treeWalk.getPathString()));
+            file.setName(treeWalk.getNameString());
+            file.setPath(treeWalk.getPathString());
             file.setRepoAddress(UriEncoder.encode(repository.getDirectory().getAbsolutePath()));
             node.addDirectory(file);
             if (treeWalk.isSubtree()) {
