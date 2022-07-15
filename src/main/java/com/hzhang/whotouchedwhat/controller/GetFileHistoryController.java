@@ -11,12 +11,12 @@ public class GetFileHistoryController {
     private GetFileHistoryService fileHistoryService;
 
     public GetFileHistoryController() {
-        fileHistoryService = new GetFileHistoryService();
     }
 
     @GetMapping(value = "/history")
     public AuthorHistory getHistory(@RequestParam(name = "file_path") String filePath,
                                     @RequestParam(name = "repo_path") String repoPath) {
+        fileHistoryService = new GetFileHistoryService();
         fileHistoryService.getAuthorHistory(filePath, repoPath);
         return fileHistoryService.getHistory();
     }
