@@ -1,5 +1,7 @@
 package com.hzhang.whotouchedwhat.service;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hzhang.whotouchedwhat.model.Author;
 import com.hzhang.whotouchedwhat.model.AuthorHistory;
 import com.hzhang.whotouchedwhat.utils.LogFollowCommand;
 import exceptions.InvalidDirectoryException;
@@ -11,6 +13,8 @@ import org.yaml.snakeyaml.util.UriEncoder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GetFileHistoryService {
     private Repository repository;
@@ -37,7 +41,8 @@ public class GetFileHistoryService {
         }
     }
 
-    public AuthorHistory getHistory(){
-        return this.history;
+    public List<Author> getHistory(){
+        this.history.convertMapToList();
+        return this.history.getAuthors();
     }
 }
