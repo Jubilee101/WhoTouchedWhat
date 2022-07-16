@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,5 +32,7 @@ public class AuthorHistory implements Serializable {
         for (Map.Entry<String, Integer> entry : contributorFreqMap.entrySet()){
             authors.add(new Author(entry.getKey(), entry.getValue()));
         }
+
+        authors.sort((o1, o2) -> o2.commitCount - o1.commitCount);
     }
 }
