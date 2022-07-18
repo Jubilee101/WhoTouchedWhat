@@ -18,14 +18,14 @@ public class Directory implements Serializable {
     List<Author> authors;
     @JsonIgnore
     private String path;
-
-    public Directory() {
+    public Directory(int i) {
         subDirectories = new ArrayList<>();
     }
-
+    public Directory() {}
     public void getAllChanges(){
         this.getLineChanges();
     }
+
     private List<Author> getLineChanges() {
         if (this.authors == null) {
             this.authors = new ArrayList<>();
@@ -67,6 +67,10 @@ public class Directory implements Serializable {
 
     public void addDirectory(Directory directory) {
         subDirectories.add(directory);
+    }
+
+    public boolean hasAuthors() {
+        return this.authors != null && !this.authors.isEmpty();
     }
 
 }

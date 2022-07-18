@@ -14,4 +14,6 @@ public class Author {
         commitCount = count;
         yAxis = "Authors";
     }
+    public Author() {
+    }
 }

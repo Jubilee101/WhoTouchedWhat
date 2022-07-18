@@ -1,5 +1,6 @@
 package com.hzhang.whotouchedwhat.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hzhang.whotouchedwhat.model.AuthorHistory;
 import com.hzhang.whotouchedwhat.model.Directory;
 import com.hzhang.whotouchedwhat.utils.LogFollowCommand;
@@ -21,19 +22,27 @@ public class DirectoryParseService {
     private Directory root;
     private Repository repository;
     public DirectoryParseService() {
-        root = new Directory();
+        root = new Directory(0);
     }
 
     public Directory getRoot() {
+        if (!root.hasAuthors()) {
+            root.getAllChanges();
+        }
         return root;
     }
 
     public void parseDirectory(String address){
-        address = UriEncoder.decode(address);
-        address = Paths.get(address, ".git").toString();
+        String newAddress = Paths.get(UriEncoder.decode(address), ".git").toString();
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try {
-            repository = builder.setGitDir(new File(address))
+            File file = new File(Paths.get(address, "committer_info.json").toString());
+            if (file.exists() && !file.isDirectory()) {
+                ObjectMapper mapper = new ObjectMapper();
+                root = mapper.readValue(file, Directory.class);
+                return;
+            }
+            repository = builder.setGitDir(new File(newAddress))
                     .readEnvironment()
                     .findGitDir()
                     .build();
@@ -48,11 +57,16 @@ public class DirectoryParseService {
             treeWalk.setRecursive(false);
             treeWalk.setPostOrderTraversal(true);
             buildDirectoryTree(treeWalk, root);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(Paths.get(address, "committer_info.json").toFile(), root);
         } catch (IOException e) {
             e.printStackTrace();
             throw new InvalidDirectoryException("Unable to parse directory");
         } finally {
-            repository.close();
+            if (repository != null) {
+                repository.close();
+            }
+
         }
     }
 
@@ -74,7 +88,7 @@ public class DirectoryParseService {
                 node.getAllChanges();
                 return;
             }
-            Directory file = new Directory();
+            Directory file = new Directory(0);
             file.setName(treeWalk.getNameString());
             file.setPath(treeWalk.getPathString());
             node.addDirectory(file);

@@ -1,10 +1,14 @@
 package com.hzhang.whotouchedwhat.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hzhang.whotouchedwhat.model.Directory;
 import com.hzhang.whotouchedwhat.service.DirectoryParseService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 public class DirectoryParseController {
@@ -19,7 +23,8 @@ public class DirectoryParseController {
     public Directory parseDirectory(@RequestParam(name = "file_path") String filePath) {
         parseService = new DirectoryParseService();
         parseService.parseDirectory(filePath);
-        return parseService.getRoot();
+        Directory root = parseService.getRoot();
+        return root;
     }
 
 }
