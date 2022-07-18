@@ -88,12 +88,12 @@ public class DirectoryParseService {
                 GetFileHistoryService fileHistoryService = new GetFileHistoryService();
                 fileHistoryService.getAuthorHistory(root.getPath(),
                         repository.getDirectory().getAbsolutePath());
-                fileHistoryService.getHistory();
+                file.setAuthors(fileHistoryService.getHistory());
             }
         }
     }
 
-    private void getLineChanges() {
+    private void getAllLineChanges() {
 
     }
 }

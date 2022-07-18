@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Directory implements Serializable {
     @JsonProperty("title")
@@ -13,19 +15,33 @@ public class Directory implements Serializable {
     @JsonProperty("children")
     private List<Directory> subDirectories;
     @JsonProperty("authors")
-    List<Author> authors = new ArrayList<>();
+    List<Author> authors;
     @JsonIgnore
     private String path;
-    @JsonIgnore
-    AuthorHistory history;
 
     public Directory() {
         subDirectories = new ArrayList<>();
     }
 
-    public void getLineChanges() {
-
+    public List<Author> getLineChanges() {
+        if (this.authors == null) {
+            this.authors = new ArrayList<>();
+            AuthorHistory history = new AuthorHistory();
+            for (Directory child : subDirectories) {
+                List<Author> childHistory = child.getLineChanges();
+                for (Author author : childHistory) {
+                    history.addContributor(author.name, author.commitCount);
+                }
+            }
+            history.convertMapToList();
+            authors = history.getAuthors();
+        }
+        return this.authors;
     }
+    public void setAuthors(List<Author> authors) {
+        this.authors = authors;
+    }
+
 
     public List<Directory> getSubDirectories() {
         return this.subDirectories;

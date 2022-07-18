@@ -16,7 +16,7 @@ public class AuthorHistory implements Serializable {
         contributorFreqMap = new HashMap<>();
     }
 
-    public void addContributor(String contributorName, int count) {
+    public void addContributor(String contributorName, long count) {
         contributorFreqMap.put(contributorName,
                 contributorFreqMap.getOrDefault(contributorName, (long)0) + count);
     }
