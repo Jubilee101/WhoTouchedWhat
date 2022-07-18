@@ -17,8 +17,8 @@ public class DirectoryParseServiceTest {
     }
     @Test
     public void testDirectoryBuilding() {
-        String address = "E:\\Spring 2022\\17645\\Project\\milestone2\\group-project-s22-f-r-i-d-a-y";
-        System.out.println(UriEncoder.encode("AIContainer/miniprogram/app.js"));
+        //String address = "E:\\Spring 2022\\rec07-gui";
+        String address = "E:\\Spring 2022\\SEAI\\Smart_container";
         parseService.parseDirectory(address);
         Directory root = parseService.getRoot();
         List<Directory> head = root.getSubDirectories();

@@ -71,6 +71,7 @@ public class DirectoryParseService {
              * this subtree has been traversed and return to upper layer
              */
             if (treeWalk.getNameString().equals(node.getName())) {
+                node.getAllChanges();
                 return;
             }
             Directory file = new Directory();
@@ -84,16 +85,11 @@ public class DirectoryParseService {
                 buildDirectoryTree(treeWalk, file);
             }
             if (isLeaf) {
-                LogFollowCommand.follow(repository, file.getPath());
                 GetFileHistoryService fileHistoryService = new GetFileHistoryService();
-                fileHistoryService.getAuthorHistory(root.getPath(),
+                fileHistoryService.getAuthorHistory(file.getPath(),
                         repository.getDirectory().getAbsolutePath());
                 file.setAuthors(fileHistoryService.getHistory());
             }
         }
-    }
-
-    private void getAllLineChanges() {
-
     }
 }

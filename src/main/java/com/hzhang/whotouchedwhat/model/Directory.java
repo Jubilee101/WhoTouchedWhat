@@ -23,7 +23,10 @@ public class Directory implements Serializable {
         subDirectories = new ArrayList<>();
     }
 
-    public List<Author> getLineChanges() {
+    public void getAllChanges(){
+        this.getLineChanges();
+    }
+    private List<Author> getLineChanges() {
         if (this.authors == null) {
             this.authors = new ArrayList<>();
             AuthorHistory history = new AuthorHistory();
@@ -41,7 +44,6 @@ public class Directory implements Serializable {
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
     }
-
 
     public List<Directory> getSubDirectories() {
         return this.subDirectories;
