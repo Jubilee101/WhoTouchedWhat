@@ -5,15 +5,19 @@ import com.hzhang.whotouchedwhat.model.Author;
 import com.hzhang.whotouchedwhat.model.AuthorHistory;
 import com.hzhang.whotouchedwhat.utils.LogFollowCommand;
 import exceptions.InvalidDirectoryException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.yaml.snakeyaml.util.UriEncoder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GetFileHistoryService {
@@ -30,8 +34,21 @@ public class GetFileHistoryService {
                     .findGitDir()
                     .build();
             RevWalk rw = LogFollowCommand.follow(repository, filePath);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            DiffFormatter df = new DiffFormatter(out);
             for (RevCommit commit : rw) {
-                history.addContributor(commit.getAuthorIdent().getName());
+                df.setRepository(repository);
+                df.setDiffComparator(RawTextComparator.DEFAULT);
+                df.setDetectRenames(true);
+                List<DiffEntry> diffs = df.scan(commit.getTree(), commit.getParent(0).getTree());
+                for (DiffEntry diff : diffs) {
+                    int count = 0;
+                    for (Edit edit : df.toFileHeader(diff).toEditList()) {
+                        count += edit.getEndA() - edit.getBeginA();
+                        count += edit.getEndB() - edit.getBeginB();
+                    }
+                    history.addContributor(commit.getAuthorIdent().getName(), count);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

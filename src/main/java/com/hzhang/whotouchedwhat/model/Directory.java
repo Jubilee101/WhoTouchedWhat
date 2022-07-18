@@ -1,5 +1,6 @@
 package com.hzhang.whotouchedwhat.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
@@ -11,22 +12,21 @@ public class Directory implements Serializable {
     private String name;
     @JsonProperty("children")
     private List<Directory> subDirectories;
-    @JsonProperty("file_path")
+    @JsonProperty("authors")
+    List<Author> authors = new ArrayList<>();
+    @JsonIgnore
     private String path;
+    @JsonIgnore
+    AuthorHistory history;
 
-    public String getRepoAddress() {
-        return repoAddress;
-    }
-
-    public void setRepoAddress(String repoAddress) {
-        this.repoAddress = repoAddress;
-    }
-
-    @JsonProperty("repo_address")
-    private String repoAddress;
     public Directory() {
         subDirectories = new ArrayList<>();
     }
+
+    public void getLineChanges() {
+
+    }
+
     public List<Directory> getSubDirectories() {
         return this.subDirectories;
     }

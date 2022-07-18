@@ -1,5 +1,6 @@
 package com.hzhang.whotouchedwhat.service;
 
+import com.hzhang.whotouchedwhat.model.AuthorHistory;
 import com.hzhang.whotouchedwhat.model.Directory;
 import com.hzhang.whotouchedwhat.utils.LogFollowCommand;
 import exceptions.InvalidDirectoryException;
@@ -75,12 +76,24 @@ public class DirectoryParseService {
             Directory file = new Directory();
             file.setName(treeWalk.getNameString());
             file.setPath(treeWalk.getPathString());
-            file.setRepoAddress(UriEncoder.encode(repository.getDirectory().getAbsolutePath()));
             node.addDirectory(file);
+            boolean isLeaf = true;
             if (treeWalk.isSubtree()) {
+                isLeaf = false;
                 treeWalk.enterSubtree();
                 buildDirectoryTree(treeWalk, file);
             }
+            if (isLeaf) {
+                LogFollowCommand.follow(repository, file.getPath());
+                GetFileHistoryService fileHistoryService = new GetFileHistoryService();
+                fileHistoryService.getAuthorHistory(root.getPath(),
+                        repository.getDirectory().getAbsolutePath());
+                fileHistoryService.getHistory();
+            }
         }
+    }
+
+    private void getLineChanges() {
+
     }
 }

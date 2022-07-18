@@ -1,7 +1,6 @@
 package com.hzhang.whotouchedwhat.controller;
 
 import com.hzhang.whotouchedwhat.model.Author;
-import com.hzhang.whotouchedwhat.model.AuthorHistory;
 import com.hzhang.whotouchedwhat.service.GetFileHistoryService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
