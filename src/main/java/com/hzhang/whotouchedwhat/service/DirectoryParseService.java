@@ -58,7 +58,7 @@ public class DirectoryParseService {
             treeWalk.setPostOrderTraversal(true);
             buildDirectoryTree(treeWalk, root);
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(Paths.get(address, "committer_info.json").toFile(), root);
+            mapper.writeValue(Paths.get(UriEncoder.decode(address), "committer_info.json").toFile(), root);
         } catch (IOException e) {
             e.printStackTrace();
             throw new InvalidDirectoryException("Unable to parse directory");
