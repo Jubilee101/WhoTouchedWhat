@@ -36,7 +36,7 @@ public class DirectoryParseService {
         String newAddress = Paths.get(UriEncoder.decode(address), ".git").toString();
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try {
-            File file = new File(Paths.get(address, "committer_info.json").toString());
+            File file = new File(Paths.get(UriEncoder.decode(address), "committer_info.json").toString());
             if (file.exists() && !file.isDirectory()) {
                 ObjectMapper mapper = new ObjectMapper();
                 root = mapper.readValue(file, Directory.class);
