@@ -73,4 +73,7 @@ public class Directory implements Serializable {
         return this.authors != null && !this.authors.isEmpty();
     }
 
+    public List<Author> getAuthors() {
+        return authors;
+    }
 }

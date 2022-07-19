@@ -3,6 +3,7 @@ package com.hzhang.whotouchedwhat.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hzhang.whotouchedwhat.model.AuthorHistory;
 import com.hzhang.whotouchedwhat.model.Directory;
+import com.hzhang.whotouchedwhat.utils.ColorGenerator;
 import com.hzhang.whotouchedwhat.utils.LogFollowCommand;
 import exceptions.InvalidDirectoryException;
 import org.eclipse.jgit.lib.Ref;
@@ -21,8 +22,10 @@ import java.nio.file.Paths;
 public class DirectoryParseService {
     private Directory root;
     private Repository repository;
+    private ColorGenerator colorGenerator;
     public DirectoryParseService() {
         root = new Directory(0);
+        colorGenerator = new ColorGenerator();
     }
 
     public Directory getRoot() {
@@ -86,6 +89,7 @@ public class DirectoryParseService {
              */
             if (treeWalk.getNameString().equals(node.getName())) {
                 node.getAllChanges();
+                colorGenerator.assignColor(node);
                 return;
             }
             Directory file = new Directory(0);
@@ -103,6 +107,7 @@ public class DirectoryParseService {
                 fileHistoryService.getAuthorHistory(file.getPath(),
                         repository.getDirectory().getAbsolutePath());
                 file.setAuthors(fileHistoryService.getHistory());
+                colorGenerator.assignColor(file);
             }
         }
     }

@@ -3,6 +3,7 @@ package com.hzhang.whotouchedwhat.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hzhang.whotouchedwhat.model.Directory;
 import com.hzhang.whotouchedwhat.service.DirectoryParseService;
+import com.hzhang.whotouchedwhat.utils.ColorGenerator;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,8 @@ public class DirectoryParseController {
         parseService = new DirectoryParseService();
         parseService.parseDirectory(filePath);
         Directory root = parseService.getRoot();
+        ColorGenerator colorGenerator = new ColorGenerator();
+        colorGenerator.assignColor(root);
         return root;
     }
 

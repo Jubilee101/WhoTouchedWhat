@@ -1,6 +1,7 @@
 package com.hzhang.whotouchedwhat.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.hzhang.whotouchedwhat.utils.ColorGenerator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
