@@ -23,21 +23,32 @@ public class DirectoryParseService {
     private Directory root;
     private Repository repository;
     private ColorGenerator colorGenerator;
+    private String address;
     public DirectoryParseService() {
         root = new Directory(0);
         colorGenerator = new ColorGenerator();
     }
-
+    // if root has no authors, that means this is the first time
+    // we need to color it, sum up the authors and save the result
     public Directory getRoot() {
         if (!root.hasAuthors()) {
             root.getAllChanges();
+            colorGenerator.assignColor(root);
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                mapper.writeValue(Paths.get(UriEncoder.decode(address), "committer_info.json").toFile(), root);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                return root;
+            }
         }
-        colorGenerator.assignColor(root);
         return root;
     }
 
     public void parseDirectory(String address){
         String newAddress = Paths.get(UriEncoder.decode(address), ".git").toString();
+        this.address = address;
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         try {
             File file = new File(Paths.get(UriEncoder.decode(address), "committer_info.json").toString());
@@ -61,8 +72,6 @@ public class DirectoryParseService {
             treeWalk.setRecursive(false);
             treeWalk.setPostOrderTraversal(true);
             buildDirectoryTree(treeWalk, root);
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(Paths.get(UriEncoder.decode(address), "committer_info.json").toFile(), root);
         } catch (IOException e) {
             e.printStackTrace();
             throw new InvalidDirectoryException("Unable to parse directory");
