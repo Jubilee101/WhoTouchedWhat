@@ -32,6 +32,7 @@ public class DirectoryParseService {
         if (!root.hasAuthors()) {
             root.getAllChanges();
         }
+        colorGenerator.assignColor(root);
         return root;
     }
 

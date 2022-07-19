@@ -25,8 +25,6 @@ public class DirectoryParseController {
         parseService = new DirectoryParseService();
         parseService.parseDirectory(filePath);
         Directory root = parseService.getRoot();
-        ColorGenerator colorGenerator = new ColorGenerator();
-        colorGenerator.assignColor(root);
         return root;
     }
 
