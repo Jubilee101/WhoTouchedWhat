@@ -7,12 +7,12 @@ This a git analysis tool for you to see how many edits were done to each file an
 
 <br />
 This part is the back-end implementation of Who Touched What?. 
+<<<<<<< HEAD
 
 <br />
 
-See front-end at 
+See front-end at [WhoTouchedWhatFE](https://github.com/Jubilee101/WhoTouchedWhatFE)
 
-[WhoTouchedWhatFE]: (https://github.com/Jubilee101/WhoTouchedWhatFE)
 
 
 
