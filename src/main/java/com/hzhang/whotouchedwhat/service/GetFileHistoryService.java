@@ -64,6 +64,9 @@ public class GetFileHistoryService {
                         count += edit.getEndA() - edit.getBeginA();
                         count += edit.getEndB() - edit.getBeginB();
                     }
+                    if (count == 0) {
+                        count = 1;
+                    }
                     history.addContributor(commit.getAuthorIdent().getName(), count);
                 }
             }
