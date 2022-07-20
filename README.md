@@ -9,6 +9,10 @@ This a git analysis tool for you to see how many edits were done to each file an
 
 <br />
 
+![Show case](https://github.com/Jubilee101/WhoTouchedWhat/blob/main/img/demo.gif)
+
+<br />
+
 #### Features
 
 1. Quick parsing, estimated time for going through all files with 10k+ commits is under 10 minutes. 
