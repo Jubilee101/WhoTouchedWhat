@@ -3,11 +3,8 @@ package com.hzhang.whotouchedwhat.utils;
 import com.hzhang.whotouchedwhat.model.Author;
 import com.hzhang.whotouchedwhat.model.Directory;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 

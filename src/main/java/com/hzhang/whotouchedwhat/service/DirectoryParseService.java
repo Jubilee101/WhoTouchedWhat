@@ -21,11 +21,9 @@ import java.nio.file.Paths;
 public class DirectoryParseService {
     private Directory root;
     private Repository repository;
-    private ColorGenerator colorGenerator;
     private String address;
     public DirectoryParseService() {
         root = new Directory(0);
-        colorGenerator = new ColorGenerator();
     }
     // if root has no authors, that means this is the first time
     // we need to color it, sum up the authors and save the result
@@ -39,7 +37,6 @@ public class DirectoryParseService {
                 e.printStackTrace();
             }
         }
-        colorGenerator.assignColor(root);
         return root;
     }
 
