@@ -1,10 +1,9 @@
 package com.hzhang.whotouchedwhat.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hzhang.whotouchedwhat.model.AuthorHistory;
 import com.hzhang.whotouchedwhat.model.Directory;
 import com.hzhang.whotouchedwhat.utils.ColorGenerator;
-import com.hzhang.whotouchedwhat.utils.LogFollowCommand;
+import com.hzhang.whotouchedwhat.utils.GetFileHistory;
 import exceptions.InvalidDirectoryException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -33,16 +32,14 @@ public class DirectoryParseService {
     public Directory getRoot() {
         if (!root.hasAuthors()) {
             root.getAllChanges();
-            colorGenerator.assignColor(root);
             ObjectMapper mapper = new ObjectMapper();
             try {
                 mapper.writeValue(Paths.get(UriEncoder.decode(address), "committer_info.json").toFile(), root);
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
-                return root;
             }
         }
+        colorGenerator.assignColor(root);
         return root;
     }
 
@@ -99,7 +96,6 @@ public class DirectoryParseService {
              */
             if (treeWalk.getNameString().equals(node.getName())) {
                 node.getAllChanges();
-                colorGenerator.assignColor(node);
                 return;
             }
             Directory file = new Directory(0);
@@ -113,11 +109,10 @@ public class DirectoryParseService {
                 buildDirectoryTree(treeWalk, file);
             }
             if (isLeaf) {
-                GetFileHistoryService fileHistoryService = new GetFileHistoryService();
+                GetFileHistory fileHistoryService = new GetFileHistory();
                 fileHistoryService.getAuthorHistory(file.getPath(),
                         repository.getDirectory().getAbsolutePath());
                 file.setAuthors(fileHistoryService.getHistory());
-                colorGenerator.assignColor(file);
             }
         }
     }

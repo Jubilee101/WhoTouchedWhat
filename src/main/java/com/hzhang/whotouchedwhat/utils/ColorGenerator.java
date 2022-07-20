@@ -13,15 +13,23 @@ import java.util.Set;
 
 public class ColorGenerator {
     private Set<String> usedColor;
-    private Map<String, String> authorColor;
+    private String[] pallet = new String[]{"#1AFD9C", "#00CACA", "#005AB5", "#FF5151",
+            "#B15BFF", "#8E8E8E", "#73BF00", "#FF5809", "#984B4B", "#949449", "#5151A2"};
+    private int count = 0;
     public ColorGenerator() {
         usedColor = new HashSet<>();
-        authorColor = new HashMap<>();
     }
     private String generateColor() {
-        String color = getColor();
-        while (usedColor.contains(color)) {
+        String color;
+        if (count < pallet.length) {
+            color = pallet[count];
+            count++;
+        }
+        else {
             color = getColor();
+            while (usedColor.contains(color)) {
+                color = getColor();
+            }
         }
         usedColor.add(color);
         return color;
@@ -45,14 +53,8 @@ public class ColorGenerator {
     public void assignColor(Directory node) {
         List<Author> authors = node.getAuthors();
         for (Author author : authors) {
-            if (authorColor.containsKey(author.getName())){
-                author.setColor(authorColor.get(author.getName()));
-            }
-            else {
-                String color = generateColor();
-                authorColor.put(author.getName(), color);
-                author.setColor(color);
-            }
+            String color = generateColor();
+            author.setColor(color);
         }
     }
 }

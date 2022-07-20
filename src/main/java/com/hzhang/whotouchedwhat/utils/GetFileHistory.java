@@ -1,6 +1,5 @@
-package com.hzhang.whotouchedwhat.service;
+package com.hzhang.whotouchedwhat.utils;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hzhang.whotouchedwhat.model.Author;
 import com.hzhang.whotouchedwhat.model.AuthorHistory;
 import com.hzhang.whotouchedwhat.utils.LogFollowCommand;
@@ -12,7 +11,6 @@ import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
@@ -25,7 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class GetFileHistoryService {
+public class GetFileHistory {
     private Repository repository;
     private AuthorHistory history;
 
