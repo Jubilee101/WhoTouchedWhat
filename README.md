@@ -25,8 +25,8 @@ This part is the back-end implementation of Who Touched What?.
 See front-end at [WhoTouchedWhatFE](https://github.com/Jubilee101/WhoTouchedWhatFE)
 
 #### Notice
-Since Who Touched What parses the file tree based on the last commit, if some files are
-no longer in the directory tree, their line changes WILL NOT be added up all the way to root directory,
+Since Who Touched What parses the file tree based on the last commit, if some file is
+no longer in the directory tree, its line changes WILL NOT be added up all the way to root directory,
 causing total line changes corresponding to each contributor not the same as what GitHub tells you. 
 In short, it doesn't see forgotten contributions. However, it still sees all the changes in existing files
 despite any name or directory changes.
