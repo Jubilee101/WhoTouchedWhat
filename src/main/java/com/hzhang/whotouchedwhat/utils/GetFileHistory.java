@@ -21,6 +21,8 @@ import org.yaml.snakeyaml.util.UriEncoder;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class GetFileHistory {
@@ -54,7 +56,10 @@ public class GetFileHistory {
                     diffs = df.scan(commit.getParent(0).getTree(),commit.getTree());
                 }
                 for (DiffEntry diff : diffs) {
-                    if (!diff.getNewPath().equals(filePath)){
+                    Path p = Paths.get(diff.getNewPath());
+                    String fileName = p.getFileName().toString();
+                    Path curP = Paths.get(filePath);
+                    if (!fileName.equals(curP.getFileName().toString())){
                         continue;
                     }
                     int count = 0;
