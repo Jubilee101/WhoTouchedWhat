@@ -11,6 +11,7 @@ import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
@@ -23,7 +24,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GetFileHistory {
     private Repository repository;
@@ -41,7 +45,14 @@ public class GetFileHistory {
             RevWalk rw = LogFollowCommand.follow(repository, filePath);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             DiffFormatter df = new DiffFormatter(out);
+            Set<String> paths = new HashSet<>();
+            paths.add(filePath);
+            List<RevCommit> commits = new ArrayList<>();
             for (RevCommit commit : rw) {
+                commits.add(commit);
+            }
+            for (int i = 0; i < commits.size(); i++) {
+                RevCommit commit = commits.get(i);
                 df.setRepository(repository);
                 df.setDiffComparator(RawTextComparator.DEFAULT);
                 df.setDetectRenames(true);
@@ -56,10 +67,21 @@ public class GetFileHistory {
                     diffs = df.scan(commit.getParent(0).getTree(),commit.getTree());
                 }
                 for (DiffEntry diff : diffs) {
-                    Path p = Paths.get(diff.getNewPath());
-                    String fileName = p.getFileName().toString();
-                    Path curP = Paths.get(filePath);
-                    if (!fileName.equals(curP.getFileName().toString())){
+                    String newPath = diff.getNewPath();
+                    String oldPath = diff.getOldPath();
+                    int time = commit.getCommitTime();
+//                    System.out.println("time " + time);
+//                    System.out.println("new " + newPath);
+//                    System.out.println("old " + oldPath);
+
+                    if (paths.contains(newPath)) {
+                        if (!oldPath.equals("/dev/null")){
+                            paths.add(oldPath);
+                        }
+                    } else if (newPath.equals("/dev/null") && paths.contains(oldPath)) {
+                        // do nothing
+                    }
+                    else {
                         continue;
                     }
                     int count = 0;
