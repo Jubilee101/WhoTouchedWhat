@@ -58,6 +58,7 @@ public class DirectoryParseService {
 
             Ref head = repository.findRef("HEAD");
             root.setName(head.getName());
+            root.setPath("");
             RevWalk walk = new RevWalk(repository);
             RevCommit commit = walk.parseCommit(head.getObjectId());
             RevTree tree = commit.getTree();
@@ -91,7 +92,7 @@ public class DirectoryParseService {
              * treewalk will return this subtree's root again, then we shall know that
              * this subtree has been traversed and return to upper layer
              */
-            if (treeWalk.getNameString().equals(node.getName())) {
+            if (treeWalk.getPathString().equals(node.getPath())) {
                 node.getAllChanges();
                 return;
             }
